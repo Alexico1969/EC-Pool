@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_session import Session
 from database import connector, check_login, register_user, get_user_data, Room, init_rooms, update_user, store, get
-from process import process
 import sqlite3
 
 
@@ -13,94 +12,52 @@ app.config['SESSION_TYPE'] = 'filesystem'
 db = connector()
 print(db)
 
-rooms = init_rooms()
         
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    global rooms
-
     if 'user' not in session:
             return redirect(url_for('login'))
     
-    username, score, level, inventory, objects, door_status = get()
-
-    if score == 100:
-        session['new'] = True
-    else:
-        session['new'] = False
-
-    print("=== in home route ===")
-    print()
-    print(f"*** Inventory: {inventory}")
-    print(f"*** Level: {level}")
-    print(f"*** Score: {score}")
-    print(f"*** Username: {username}")
-    print()
-
-    user_level = level
-    room_data = rooms[level]
-    rtype = room_data.type
-    print(f"Room data: {room_data}")
-
-    msg = rooms[level].description
-
+    
     
     if request.method == 'POST':
-        command = request.form['command']
-        score -= 1
-        if score == 100:
-            session['new'] = True
-        else:
-            session['new'] = False
-        msg = process(command, inventory, rooms[level], rooms, level, objects)
-        print()
-        print(f"msg: {msg}")
-        print(f"rooms[level].type: {rooms[level].type}")
-        rtype = rooms[level].type
-        if msg == "You exit the room":
-            print("Redirecting to next level")
-            return redirect(url_for('next_level'))
+        pass
 
-    return render_template('home.html', msg=msg, inventory=inventory, user_level=user_level, room_data=room_data, username=username,rtype=rtype, score=score)
-
-
-@app.route('/next_level', methods=['GET', 'POST'])
-def next_level():
-
-    print("*** Entering NEXT LEVEL route ***")
-    if 'user' not in session:
-            return redirect(url_for('login'))
-    
+    msg = ""
+    inventory = "inventory"
+    user_level = "user_level"
     username = session['user']
-    level = session['level']
-    inventory = session['inventory']
-    score = session['score']
-    objects = session['objects']
-    session['door_status'] = "locked"
+    score = 1000
 
-    print("=== in next_level route ===")
-    print()
-    print(f"*** Inventory: {inventory}")
-    print(f"*** Level: {level}")
-    print(f"*** Score: {score}")
-    print(f"*** Username: {username}")
-    print()
-    
-    if request.method == 'POST':
-        level = level + 1
-        score += 100
-        objects = rooms[level].objects
-        store(username, score, level, inventory, objects)
-        update_user(username, inventory, level, score)
-        print('Redirecting to home')
-        return redirect(url_for('home'))
-    
-    # we want to put the leveling up here, so it doesn't run twice !
+    return render_template('home.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
 
 
-    user_level = level + 1
+@app.route('/my_predictions', methods=['GET', 'POST'])
+def my_predictions():
+    msg = ""
+    inventory = "inventory"
+    user_level = "user_level"
+    username = session['user']
+    score = 1000
+    return render_template('my_predictions.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
 
-    return render_template('next_level.html', user_level=user_level, username=username)
+@app.route('/edit_predictions', methods=['GET', 'POST'])
+def edit_predictions():
+    msg = ""
+    inventory = "inventory"
+    user_level = "user_level"
+    username = session['user']
+    score = 1000
+    return render_template('edit_predictions.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
+
+@app.route('/ranking', methods=['GET', 'POST'])
+def ranking():
+    msg = ""
+    inventory = "inventory"
+    user_level = "user_level"
+    username = session['user']
+    score = 1000
+    return render_template('my_predictions.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -148,10 +105,6 @@ def login():
             session['level'] = level
             session['score'] = score
             session['inventory'] = inventory
-            session['objects'] = rooms[level].objects
-            session['door_status'] = "locked"
-            session['new'] = True
-            print(f"session['new']: {session['new']}")
 
             return redirect(url_for('home'))
         else:
@@ -162,7 +115,7 @@ def login():
     return render_template('login.html', msg=msg)
 
 
-@app.route('/logout')
+@app.route('/logout', methods=['GET', 'POST'])
 def logout():
     session.clear()
     return redirect(url_for('home'))

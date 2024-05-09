@@ -7,8 +7,8 @@ body, h1, p {
 
 /* Make a header */
 header {
-    background: #50b3a2;
-    color: white;
+    background: #e19d30;
+    color: rgb(0, 0, 0);
     text-align: center;
     padding: 1em;
 }
@@ -40,47 +40,49 @@ footer {
   }
   
 .grid-item {
-    background-color: #0181e9;
+    background-color: #916114;
     text-align: center;
     padding: 20px;
     font-size: 24px;
     border-radius: 5px;
   }
+
   
+.menu{
+    background-color:rgb(254, 230, 195);
+    color: black;
+    padding: 5px 5px 5px 5px;
+    text-align: center;
+    border: black 4px solid;
+    margin: 6px;
+}
+
 .logo{
     padding: 2px;
 }
 
 .level{
-    background-color: aqua;
+    background-color: #b18030;
 }
 
 .topright{
-    background-color: aquamarine;
-}
-
-.healthbar{
-
+    background-color: rgb(164, 115, 0);
 }
 
 .main{
-    background-color:rgb(2, 29, 33)
+    background-color:rgb(39, 26, 0)
 }
 
 .inventory{
-    background-color: aquamarine;
-}
-
-.bottomleft{
-
+    background-color: rgb(255, 243, 150);
 }
 
 .commandline{
-    background-color: darkslategrey;
+    background-color: rgb(80, 40, 1);
 }
 
 .bottomright{
-    background-color: darkslategrey;
+    background-color: rgb(80, 40, 1);
 }
 
 
@@ -105,7 +107,7 @@ footer {
 
 .username{
     /* fix to the top-left of the screen */
-    background-color: rgb(0, 221, 255);
+    background-color:rgb(254, 230, 195);
     color: black;
     display:block;
     position: absolute;
@@ -136,6 +138,11 @@ footer {
 
 
 /*  ID's  */
+
+#ball{
+    width: 40px;
+    margin-left: 30px;
+}
 
 #submit{
     font-size: 20px;
@@ -169,7 +176,7 @@ footer {
     font-size: 20px;
     width: 200px;
     height:30px;
-    background-color: rgb(0, 221, 255);
+    background-color: rgb(254, 230, 195);
     display:block;
     position: absolute;
     top: 10px;
