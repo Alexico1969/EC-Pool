@@ -1,30 +1,56 @@
 {% extends "layout.html" %}
 
 {% block title %}
-Data dump
+Home Page
 {% endblock %}
 
 {% block content %}
-<form method="POST">
-    <div class="container">
-        <div class="grid-item logo hide"></div>
-        <div class="grid-item level">Data dump</div>
-        <div class="grid-item topright hide"></div>
-        <div class="grid-item healthbar hide">4</div>
-        <div class="grid-item main">
-            {% for line in lines %}
-                <div class="dump">{{line}}</div>
-            {% endfor %}
-        </div>
-        <div class="grid-item inventory hide"></div>
+<p class="username">{{username}}</p>
+<a href="/logout"><span id="logout_btn">logout</span></a>
 
-        <div class="grid-item bottomleft hide">7</div>
-        <div class="grid-item commandline">
-            <span class="msg">{{msg}}</span>
-        </div>
-        <div class="grid-item bottomright hide"></div>
+<div class="container">
+    <div class="grid-item topleft">
+        <p id="scr">Score</p>
+        <p id="score">{{score}}</p>
+    </div>
+    <div class="grid-item level"></div>
+    <div class="grid-item topright">
+        
+    </div>
+    <div class="grid-item healthbar"></div>
+    <div class="grid-item main">
+        
+        {% if msg %}
+            <p id="room_msg"> {{msg}} </p>
+        {% endif %}
+        <br>
+
+        
+    </div>
+    <div class="grid-item inventory">
+        <form method="GET">
+            <h3>MENU</h3>
+            <p><input type="submit" class="menu" value="My predictions" formaction="/my_predictions"></p>
+            <p><input type="submit" class="menu" value="Edit predictions" formaction="/edit_predictions"></p>
+            <p><input type="submit" class="menu" value="Ranking" formaction="/ranking"></p>
+            <p><input type="submit" class="menu" value="General info" formaction="/info"></p>
+            <p><input type="submit" class="menu" value="Pool info" formaction="/pool_info"></p>
+        </form>
+    </div>
+
+    <div class="grid-item bottomleft"></div>
+    <div class="grid-item commandline">
+        
+    </div>
+    <div class="grid-item bottomright">
+
 
     </div>
-</form>
+
+</div>
+
+
+
+
 {% endblock %}  
 

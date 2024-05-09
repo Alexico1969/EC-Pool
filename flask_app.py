@@ -23,7 +23,7 @@ def home():
     if request.method == 'POST':
         pass
 
-    msg = ""
+    msg = "Welcome to the European Championship Soccer Pool - 2024 - Please choose an option from the menu on the right of the screen."
     inventory = "inventory"
     user_level = "user_level"
     username = session['user']
@@ -58,6 +58,27 @@ def ranking():
     username = session['user']
     score = 1000
     return render_template('my_predictions.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
+
+@app.route('/info', methods=['GET', 'POST'])
+def info():
+    msg = ""
+    inventory = "inventory"
+    user_level = "user_level"
+    username = session['user']
+    score = 1000
+    return render_template('info.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
+
+@app.route('/pool_info', methods=['GET', 'POST'])
+def pool_info():
+    msg = ""
+    inventory = "inventory"
+    user_level = "user_level"
+    username = session['user']
+    score = 1000
+    return render_template('pool_info.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
+
+
+
 
 
 @app.route('/register', methods=['GET', 'POST'])

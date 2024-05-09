@@ -57,6 +57,11 @@ footer {
     margin: 6px;
 }
 
+.main_img{
+    width: 100%;
+    border-radius: 10px;
+}
+
 .logo{
     padding: 2px;
 }
@@ -70,7 +75,28 @@ footer {
 }
 
 .main{
-    background-color:rgb(39, 26, 0)
+    background-color:rgb(39, 26, 0);
+    height: 56vh;
+    overflow: auto;
+}
+
+.info_header{
+    color: beige;
+    text-align: left;
+}
+
+.matches_table{
+    color: beige;
+
+}
+
+.matches_table td {
+    padding: 3px 5px;
+}
+
+.matches_table th {
+    background: beige;
+    color: black;
 }
 
 .inventory{
@@ -113,7 +139,7 @@ footer {
     position: absolute;
     top: 10px;
     left: 50px;
-    padding: 12px 5px 0px 5px;
+    padding: 8px 5px 0px 5px;
     text-align: center;
     border: black 2px solid;
     font-size: 20px;
@@ -181,7 +207,7 @@ footer {
     position: absolute;
     top: 10px;
     right: 50px;
-    padding: 12px 5px 0px 5px;
+    padding: 8px 5px 0px 5px;
     text-align: center;
     border: black 2px solid;
 }

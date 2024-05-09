@@ -24,7 +24,7 @@ Home Page
             <p id="room_msg"> {{msg}} </p>
         {% endif %}
         <br>
-
+        <img class="main_img" src="{{ url_for('static', filename='players.png') }}">
         
     </div>
     <div class="grid-item inventory">
@@ -34,6 +34,8 @@ Home Page
             <p><input type="submit" class="menu" value="My predictions" formaction="/my_predictions"></p>
             <p><input type="submit" class="menu" value="Edit predictions" formaction="/edit_predictions"></p>
             <p><input type="submit" class="menu" value="Ranking" formaction="/ranking"></p>
+            <p><input type="submit" class="menu" value="General info" formaction="/info"></p>
+            <p><input type="submit" class="menu" value="Pool info" formaction="/pool_info"></p>
         </form>
     </div>
 
