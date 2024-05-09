@@ -1,0 +1,56 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Home Page
+{% endblock %}
+
+{% block content %}
+<p class="username">{{username}}</p>
+<a href="/logout"><span id="logout_btn">logout</span></a>
+
+<div class="container">
+    <div class="grid-item topleft">
+        <p id="scr">Score</p>
+        <p id="score">{{score}}</p>
+    </div>
+    <div class="grid-item level"></div>
+    <div class="grid-item topright">
+        
+    </div>
+    <div class="grid-item healthbar"></div>
+    <div class="grid-item main">
+        
+        {% if msg %}
+            <p id="room_msg"> {{msg}} </p>
+        {% endif %}
+        <br>
+
+        
+    </div>
+    <div class="grid-item inventory">
+        <form method="GET">
+            <h3>MENU</h3>
+            <p><input type="submit" class="menu" value="My predictions" formaction="/my_predictions"></p>
+            <p><input type="submit" class="menu" value="Edit predictions" formaction="/edit_predictions"></p>
+            <p><input type="submit" class="menu" value="Ranking" formaction="/ranking"></p>
+            <p><input type="submit" class="menu" value="General info" formaction="/info"></p>
+            <p><input type="submit" class="menu" value="Pool info" formaction="/pool_info"></p>
+        </form>
+    </div>
+
+    <div class="grid-item bottomleft"></div>
+    <div class="grid-item commandline">
+        
+    </div>
+    <div class="grid-item bottomright">
+
+
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}  
+

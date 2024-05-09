@@ -1,4 +1,4 @@
-matches = [
+matches_backup = [
     ["1","Fri Jun 14","3 p.m. ET","A","Germany vs. Scotland"],
     ["2","Sat Jun 15","9 a.m. ET","A","Hungary vs. Switzerland"],
     ["3","Sat Jun 15","midday ET","B","Spain vs. Croatia"],
@@ -124,8 +124,8 @@ def p_array(raw):
         out_list.append(match)
     for i, el in enumerate(out_list):
         tmp = el[5]
-        if i < 3:
-            print(f"#{i} : {tmp}, outlist[0] = {out_list[0]}")
+        #if i < 3:
+            #print(f"#{i} : {tmp}, outlist[0] = {out_list[0]}")
         tmp2 = tmp.split("-")
         out_list[i][5] = tmp2[0]
         out_list[i].append(tmp2[1])

@@ -58,6 +58,41 @@ footer {
     font-size: 20px;
 }
 
+.menu:hover{
+    border:#e19d30 4px solid;
+}
+
+.warning{
+    color: black;
+    background-color: beige;
+    border: beige 3px solid;
+    border-radius: 3px;
+    padding:7px 5px;
+}
+
+.sbmt{
+    font-size: 24px;
+    color: black;
+    background-color: beige;
+    border: beige 3px solid;
+    border-radius: 3px;
+    padding: 10px 5px;
+}
+
+.sbmt:hover{
+    border:#e19d30 4px solid;
+}
+
+.inp_pred{
+    color: black;
+    padding: 1px;
+    text-align: center;
+    border: black 4px solid;
+    margin: 3px;
+    font-size: 18px;
+    width: 2ch;
+}
+
 .main_img{
     width: 100%;
     border-radius: 10px;

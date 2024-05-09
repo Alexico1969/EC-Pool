@@ -47,11 +47,69 @@ def my_predictions():
 @app.route('/edit_predictions', methods=['GET', 'POST'])
 def edit_predictions():
     msg = ""
-    inventory = "inventory"
-    user_level = "user_level"
     username = session['user']
-    score = 1000
-    return render_template('edit_predictions.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
+    user_data = get_user_data(username)
+    print(f"User data: {user_data}")
+    score = user_data[0][5]
+    predictions_raw = user_data[0][6]
+    predictions = p_array(predictions_raw)
+
+    return render_template('edit_predictions.html', msg=msg, username=username, score=score, predictions = predictions)
+
+@app.route('/process_predictions', methods=['GET','POST'])
+def process_predictions():
+    if request.method == 'POST':
+        # Assuming you handle the POST data here
+        username = session.get('user')
+        if not username:
+            return jsonify({"error": "User not logged in"}), 403
+        
+        user_data = get_user_data(username)
+        score = user_data[0][5]
+
+        # Process the incoming data from the request
+        # For example, updating the score predictions
+        # Let's assume you receive and process the predictions data from the request JSON
+        predictions = request.json  # This assumes the frontend sends a JSON payload
+        print(f">> Predictions: {predictions}")
+        total_str = ""
+        for i in range(51):
+            tmp_str = ""
+            key = str(i + 1) + "H"
+            tmp_str += predictions[key]
+            tmp_str += "-"
+            key = str(i + 1) + "A"
+            tmp_str += predictions[key]
+            if i != 50:
+                tmp_str += ","
+            total_str += tmp_str
+        
+        print(f">> total_str: {total_str}")
+        level = 1
+        inventory = total_str
+        update_user(username, inventory, level, score)
+
+        # Update the user's predictions in your database or storage here
+
+        return jsonify({
+            "message": "Your predictions have been saved. (POST)",
+            "score": score,
+            "username": username
+        })
+
+    elif request.method == 'GET':
+        # If it's a GET request, render the HTML template as before
+        username = session.get('user')
+        if not username:
+            return "User not logged in", 403
+
+        user_data = get_user_data(username)
+        score = user_data[0][5]
+        msg = "Your predictions have been saved.(GET)"
+        return render_template('process_predictions.html', msg=msg, score=score, username=username)
+
+    else:
+        return "Invalid method", 405
 
 @app.route('/ranking', methods=['GET', 'POST'])
 def ranking():

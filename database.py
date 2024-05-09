@@ -42,11 +42,6 @@ def register_user(name, email, username, password, level, score):
     conn.close()
 
 def update_user(username, inventory, level, score):
-    inv_string = ""
-    for el in inventory:
-        inv_string += el + ","
-    inventory = inv_string[:-1]
-    print(f"*** Inventory: {inventory}")
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("UPDATE users SET level = ?, score = ?, inventory = ? WHERE username = ?", (level, score, inventory, username))

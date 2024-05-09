@@ -5,6 +5,51 @@ Home Page
 {% endblock %}
 
 {% block content %}
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+        var submitButton = document.getElementById('sbmt');
+
+        submitButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            var inputs = document.getElementsByClassName('inp_pred');
+            var data = {};
+
+            for (var i = 0; i < inputs.length; i++) {
+                var input = inputs[i];
+                data[input.id] = input.value;
+            }
+
+            fetch('/process_predictions', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                // Check the response is indeed JSON
+                const contentType = response.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new TypeError("Oops, we haven't got JSON!");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                alert('Predictions submitted successfully!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Failed to submit predictions. Error: ' + error.message);
+            });
+        });
+    });
+
+    </script>
 <p class="username">{{username}}</p>
 <a href="/logout"><span id="logout_btn">logout</span></a>
 
@@ -24,8 +69,48 @@ Home Page
             <p id="room_msg"> {{msg}} </p>
         {% endif %}
         <br>
+        <form method="POST">
+            <table class="matches_table">
+                <tr><th>#</th><th>Date</th><th>Time</th><th>Group</th><th>Teams</th><th></th><th></th><th></th></tr>
+            
+                {% for p in predictions %}
+                    <tr>
+                        <td>{{p[0]}}</td>
+                        <td>{{p[1]}}</td>
+                        <td>{{p[2]}}</td>
+                        <td>{{p[3]}}</td>
+                        <td>{{p[4]}}</td>
+                        <td>
+                            <input 
+                                type="text" 
+                                class="inp_pred" 
+                                size="1" 
+                                value="{{p[5]}}"
+                                maxlength="1"
+                                placeholder="{{p[5]}}"
+                                pattern="[0-9]"
+                                id="{{p[0]}}H"
+                                >
+                        </td>
+                        <td>-</td>
+                        <td>
+                            <input 
+                                type="text" 
+                                class="inp_pred" 
+                                size="1" 
+                                value="{{p[6]}}"
+                                maxlength="1"
+                                placeholder="{{p[6]}}"
+                                pattern="[0-9]"
+                                id="{{p[0]}}A"
+                                >
+                        </td>
+                    </tr>
 
-        
+                {% endfor %}
+
+            </table>
+        </form>
     </div>
     <div class="grid-item inventory">
         <form method="GET">
@@ -40,11 +125,10 @@ Home Page
 
     <div class="grid-item bottomleft"></div>
     <div class="grid-item commandline">
-        
+            <p class="warning">Don't forget to submit when you're done with your predictions ! 👉</p>
     </div>
     <div class="grid-item bottomright">
-
-
+            <button class="sbmt" id="sbmt">Submit</button>
     </div>
 
 </div>
