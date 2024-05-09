@@ -88,7 +88,7 @@ footer {
 
 .matches_table{
     color: beige;
-
+    margin: 0 auto;
 }
 
 .matches_table td {

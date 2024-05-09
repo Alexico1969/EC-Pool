@@ -18,6 +18,13 @@ def check_login(username, password):
         return False
     return True
 
+def create_predictions():
+    out = ""
+    for i in range(50):
+        out += "0-0,"
+    out += "0-0"
+    return out
+
 def get_user_data(username):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
@@ -26,9 +33,10 @@ def get_user_data(username):
     conn.close()
     return data
 
-def register_user(name, email, username, password, level, score, inventory):
+def register_user(name, email, username, password, level, score):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
+    inventory = create_predictions()
     c.execute("INSERT INTO users (name, email, username, password, level, score, inventory) VALUES (?, ?, ?, ?, ?, ?, ?)", (name, email, username, password, level, score, inventory))
     conn.commit()
     conn.close()

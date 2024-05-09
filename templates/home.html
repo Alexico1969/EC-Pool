@@ -21,7 +21,7 @@ Home Page
     <div class="grid-item main">
         
         {% if msg %}
-            <p id="room_msg"> {{msg}} </p>
+            <p id="room_msg"> {{msg | safe}} </p>
         {% endif %}
         <br>
         <img class="main_img" src="{{ url_for('static', filename='players.png') }}">

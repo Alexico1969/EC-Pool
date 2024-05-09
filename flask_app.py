@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_session import Session
 from database import connector, check_login, register_user, get_user_data, Room, init_rooms, update_user, store, get
+from helper import p_array
 import sqlite3
 
 
@@ -23,23 +24,25 @@ def home():
     if request.method == 'POST':
         pass
 
-    msg = "Welcome to the European Championship Soccer Pool - 2024 - Please choose an option from the menu on the right of the screen."
-    inventory = "inventory"
-    user_level = "user_level"
+    msg = "Welcome to the European Championship Soccer Pool - 2024  ⚽ <br>Please choose an option from the menu on the right of the screen 👉👉👉"
     username = session['user']
-    score = 1000
-
-    return render_template('home.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
+    user_data = get_user_data(username)
+    score = user_data[0][5]
+    return render_template('home.html', msg=msg, username=username, score=score)
 
 
 @app.route('/my_predictions', methods=['GET', 'POST'])
 def my_predictions():
     msg = ""
-    inventory = "inventory"
     user_level = "user_level"
     username = session['user']
-    score = 1000
-    return render_template('my_predictions.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
+    user_data = get_user_data(username)
+    print(f"User data: {user_data}")
+    score = user_data[0][5]
+    predictions_raw = user_data[0][6]
+    predictions = p_array(predictions_raw)
+
+    return render_template('my_predictions.html', msg=msg, user_level=user_level, username=username, score=score, predictions = predictions)
 
 @app.route('/edit_predictions', methods=['GET', 'POST'])
 def edit_predictions():
@@ -57,7 +60,7 @@ def ranking():
     user_level = "user_level"
     username = session['user']
     score = 1000
-    return render_template('my_predictions.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
+    return render_template('ranking.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
 
 @app.route('/info', methods=['GET', 'POST'])
 def info():
@@ -97,7 +100,7 @@ def register():
             return render_template('register.html', msg=msg)
 
         # Register the user
-        register_user(name, email, username, password, 1, 100, "")
+        register_user(name, email, username, password, 1, 0)
 
         return redirect(url_for('login'))
 
