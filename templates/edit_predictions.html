@@ -49,7 +49,7 @@ Home Page
         });
     });
 
-    </script>
+</script>
 <p class="username">{{username}}</p>
 <a href="/logout"><span id="logout_btn">logout</span></a>
 
@@ -81,6 +81,7 @@ Home Page
                         <td>{{p[3]}}</td>
                         <td>{{p[4]}}</td>
                         <td>
+                            {% if today_val >= p[7] %}
                             <input 
                                 type="text" 
                                 class="inp_pred" 
@@ -90,10 +91,24 @@ Home Page
                                 placeholder="{{p[5]}}"
                                 pattern="[0-9]"
                                 id="{{p[0]}}H"
+                                disabled
                                 >
+                            {% else %}
+                                <input 
+                                type="text" 
+                                class="inp_pred" 
+                                size="1" 
+                                value="{{p[5]}}"
+                                maxlength="1"
+                                placeholder="{{p[5]}}"
+                                pattern="[0-9]"
+                                id="{{p[0]}}H"
+                                >
+                            {% endif %}
                         </td>
                         <td>-</td>
                         <td>
+                            {% if today_val >= p[7] %}
                             <input 
                                 type="text" 
                                 class="inp_pred" 
@@ -103,7 +118,20 @@ Home Page
                                 placeholder="{{p[6]}}"
                                 pattern="[0-9]"
                                 id="{{p[0]}}A"
+                                disabled
                                 >
+                            {% else %}
+                                <input 
+                                type="text" 
+                                class="inp_pred" 
+                                size="1" 
+                                value="{{p[6]}}"
+                                maxlength="1"
+                                placeholder="{{p[6]}}"
+                                pattern="[0-9]"
+                                id="{{p[0]}}A"
+                                >
+                            {% endif %}
                         </td>
                     </tr>
 

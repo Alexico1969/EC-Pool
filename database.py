@@ -6,7 +6,10 @@ def connector():
     print("Opened database successfully")
     conn.execute('CREATE TABLE IF NOT EXISTS users (name TEXT, email TEXT, username TEXT, password TEXT, level INTEGER, score INTEGER, inventory TEXT )')
     print("Table 'users' active")
+    conn.execute('CREATE TABLE IF NOT EXISTS results (results TEXT)')
+    print("Table 'results' active")
     conn.close()
+    
     
 def check_login(username, password):
     conn = sqlite3.connect('database.db')

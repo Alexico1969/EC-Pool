@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_session import Session
 from database import connector, check_login, register_user, get_user_data, Room, init_rooms, update_user, store, get
-from helper import p_array
+from helper import p_array, p_array_edit, today, value_date
 import sqlite3
 
 
@@ -16,6 +16,9 @@ print(db)
         
 @app.route('/', methods=['GET', 'POST'])
 def home():
+    print(today())
+    print(f"Today's value: {value_date(today())}")
+    print(f"July 1st's value: {value_date('Sat Jul 1')}")
     if 'user' not in session:
             return redirect(url_for('login'))
     
@@ -37,7 +40,7 @@ def my_predictions():
     user_level = "user_level"
     username = session['user']
     user_data = get_user_data(username)
-    print(f"User data: {user_data}")
+    #print(f"User data: {user_data}")
     score = user_data[0][5]
     predictions_raw = user_data[0][6]
     predictions = p_array(predictions_raw)
@@ -47,14 +50,16 @@ def my_predictions():
 @app.route('/edit_predictions', methods=['GET', 'POST'])
 def edit_predictions():
     msg = ""
+    today_val = value_date(today())
+    #today_val = value_date("Fri Jun 20") # to test if predictions can be made for today's match or matches in the past (should not be able)
     username = session['user']
     user_data = get_user_data(username)
-    print(f"User data: {user_data}")
+    #print(f"User data: {user_data}")
     score = user_data[0][5]
     predictions_raw = user_data[0][6]
-    predictions = p_array(predictions_raw)
+    predictions = p_array_edit(predictions_raw)
 
-    return render_template('edit_predictions.html', msg=msg, username=username, score=score, predictions = predictions)
+    return render_template('edit_predictions.html', msg=msg, username=username, score=score, predictions = predictions, today_val=today_val)
 
 @app.route('/process_predictions', methods=['GET','POST'])
 def process_predictions():
