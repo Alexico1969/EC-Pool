@@ -42,6 +42,16 @@ def check_login(username, password):
         return False
     return True
 
+def check_existing_user(username):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM users WHERE username = ? ", (username,))
+    data = c.fetchall()
+    conn.close()
+    if len(data) == 0:
+        return False
+    return True
+
 def create_predictions():
     out = ""
     for i in range(50):
@@ -87,17 +97,7 @@ def update_match_results(updated_results):
     conn.commit()
     conn.close()
 
-def get():
-    #get values from Session
-    username = session['user']
-    score = session['score']
-    level = session['level']
-    inventory = session['inventory']
-    objects = session['objects']
-    door_status = session['door_status']
-
-    return username, score, level, inventory, objects, door_status
-
+'''
 def store(username, score, level, inventory, objects):
     #store in Session
     session['user'] = username
@@ -105,7 +105,8 @@ def store(username, score, level, inventory, objects):
     session['level'] = level
     session['inventory'] = inventory
     session['objects'] = objects
-    
+'''
+
 def get_admin_info():
     info = {}
     conn = sqlite3.connect('database.db')
@@ -142,9 +143,9 @@ def calc_score(predictions_raw):
     score = 0
     match_results = get_match_results()[0].split(",")
     predictions = predictions_raw.split(",")
-    print("=== function calc_score ==")
-    print(f"predictions: {predictions}")
-    print(f"match_results: {match_results}")
+    #print("=== function calc_score ==")
+    #print(f"predictions: {predictions}")
+    #print(f"match_results: {match_results}")
     for i, match in enumerate(match_results):
         if match != "E-E":
             current_result = match
@@ -154,3 +155,38 @@ def calc_score(predictions_raw):
             score += outcome_score(current_result, current_prediction)
     print(f">> new score: {score}")
     return score
+
+def recalc_score_all():
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM users")
+    data = c.fetchall()
+    conn.close()
+    level = 1
+    print("  >>> feching data")
+    for row in data:
+        username = row[2]
+        predictions = row[6]
+        score = calc_score(predictions)
+        update_user(username, predictions, level, score)
+
+def calc_ranking():
+    ranking = []
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM users")
+    data = c.fetchall()
+    conn.close()
+    print("  >>> feching data")
+    
+    for row in data:
+        if row[0] != 'admin':
+            tmp_list = []
+            tmp_list.append(row[0])
+            tmp_list.append(row[5])
+            ranking.append(tmp_list)
+
+    ranking_sorted = sorted(ranking, key=lambda x: x[0], reverse=True)
+
+    
+    return ranking_sorted

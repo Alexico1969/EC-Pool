@@ -32,11 +32,11 @@ footer {
 }
 
 a{
-    color: yellow;
+    color: black;
 }
 
 a:visited{
-    color:#e19d30;
+    color: rgb(34, 28, 28);
 }
 
 .container {
@@ -167,6 +167,7 @@ a:visited{
 .matches_table th {
     background: beige;
     color: black;
+    padding: 3px 5px;
 }
 
 .inventory{
@@ -360,4 +361,12 @@ a:visited{
 #vid-but:focus {
     /* Remove the outline that appears on mouse-over */
     outline: none;
+}
+
+#tt_link{
+    color: yellow;
+}
+
+#tt_link:visited{
+    color:#e19d30;
 }

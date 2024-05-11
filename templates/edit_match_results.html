@@ -41,6 +41,7 @@ Home Page
             .then(data => {
                 console.log('Success:', data);
                 alert('Match results submitted successfully!');
+                location.reload();
             })
             .catch((error) => {
                 console.error('Error:', error);

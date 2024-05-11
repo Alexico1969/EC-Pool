@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_session import Session
-from database import connector, check_login, register_user, get_user_data, update_user, get_admin_info, get_match_results, update_match_results, calc_score
+from database import connector, check_login, register_user, get_user_data, update_user, get_admin_info, get_match_results, update_match_results, calc_score, calc_ranking, check_existing_user, recalc_score_all
 from helper import p_array, p_array_edit, today, value_date
 import sqlite3
 
@@ -118,13 +118,13 @@ def process_predictions():
                 tmp_str += ","
             total_str += tmp_str
         
-        print(f">> total_str: {total_str}")
+        #print(f">> total_str: {total_str}")
         level = 1
         inventory = total_str
         #score = calc_score(predictions)
         update_user(username, inventory, level, score)
         user_data = get_user_data(username)
-        print(f"&&& user_data: {user_data}")
+        #print(f"&&& user_data: {user_data}")
         updated_predictions = user_data[0][6]
         score = calc_score(updated_predictions)
         update_user(username, inventory, level, score)
@@ -203,7 +203,7 @@ def process_match_results():
         # For example, updating the score match_results
         # Let's assume you receive and process the match_results data from the request JSON
         match_results = request.json  # This assumes the frontend sends a JSON payload
-        print(f">> match_results: {match_results}")
+        #print(f">> match_results: {match_results}")
         total_str = ""
         for i in range(51):
             tmp_str = ""
@@ -216,10 +216,11 @@ def process_match_results():
                 tmp_str += ","
             total_str += tmp_str
         
-        print(f">> total_str: {total_str}")
+        #print(f">> total_str: {total_str}")
         level = 1
         inventory = total_str
         update_match_results(inventory)
+        recalc_score_all()
 
         # Update the user's match_results in your database or storage here
 
@@ -253,7 +254,9 @@ def ranking():
     username = session['user']
     user_data = get_user_data(username)
     score = user_data[0][5]
-    return render_template('ranking.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
+    ranking_data = calc_ranking()
+    print(f"Ranking data: {ranking_data}")
+    return render_template('ranking.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score, ranking_data=ranking_data)
 
 @app.route('/info', methods=['GET', 'POST'])
 def info():
@@ -279,10 +282,6 @@ def pool_info():
     score = user_data[0][5]
     return render_template('pool_info.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
 
-
-
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     msg = ""
@@ -293,8 +292,8 @@ def register():
         password = request.form['password']
 
         # Check if the username and password are valid
-
-        if check_login(username, password):
+        
+        if check_existing_user(username):
             msg = 'Username already exists'
             return render_template('register.html', msg=msg)
 

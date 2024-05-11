@@ -24,7 +24,15 @@ Home Page
             <p id="room_msg"> {{msg}} </p>
         {% endif %}
         <br>
+        <table class="matches_table">
+            <tr><th>Name</th><th>Score</th></tr>
+        
+            {% for row in ranking_data %}
+                <tr><td>{{row[0]}}</td><td>{{row[1]}}</td></tr>
 
+            {% endfor %}
+
+        </table>
         
     </div>
     <div class="grid-item inventory">
