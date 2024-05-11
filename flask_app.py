@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_session import Session
-from database import connector, check_login, register_user, get_user_data, Room, init_rooms, update_user, store, get
+from database import connector, check_login, register_user, get_user_data, update_user, get_admin_info, get_match_results, update_match_results, calc_score
 from helper import p_array, p_array_edit, today, value_date
 import sqlite3
 
@@ -13,16 +13,16 @@ app.config['SESSION_TYPE'] = 'filesystem'
 db = connector()
 print(db)
 
+print(today())
+print(f"Today's value: {value_date(today())}")
+print(f"July 1st's value: {value_date('Sat Jul 1')}")
+
         
 @app.route('/', methods=['GET', 'POST'])
 def home():
-    print(today())
-    print(f"Today's value: {value_date(today())}")
-    print(f"July 1st's value: {value_date('Sat Jul 1')}")
+
     if 'user' not in session:
             return redirect(url_for('login'))
-    
-    
     
     if request.method == 'POST':
         pass
@@ -33,9 +33,33 @@ def home():
     score = user_data[0][5]
     return render_template('home.html', msg=msg, username=username, score=score)
 
+@app.route('/admin', methods=['GET', 'POST'])
+def admin():
+
+    if 'user' not in session:
+            return redirect(url_for('login'))
+    
+    username = session['user']
+    if username != 'admin':
+        return redirect('/')
+
+    if request.method == 'POST':
+        pass
+
+    admin_data = get_admin_info()
+
+    nr_of_users = admin_data['nr_of_users']
+
+    msg = "⚽ ADMIN PAGE ⚽<br>Restricted Access"
+    username = session['user']
+    user_data = get_user_data(username)
+    score = user_data[0][5]
+    return render_template('admin.html', msg=msg, username=username, score=score, nr_of_users=nr_of_users)
 
 @app.route('/my_predictions', methods=['GET', 'POST'])
 def my_predictions():
+    if 'user' not in session:
+            return redirect(url_for('login'))
     msg = ""
     user_level = "user_level"
     username = session['user']
@@ -49,6 +73,8 @@ def my_predictions():
 
 @app.route('/edit_predictions', methods=['GET', 'POST'])
 def edit_predictions():
+    if 'user' not in session:
+            return redirect(url_for('login'))
     msg = ""
     today_val = value_date(today())
     #today_val = value_date("Fri Jun 20") # to test if predictions can be made for today's match or matches in the past (should not be able)
@@ -58,11 +84,15 @@ def edit_predictions():
     score = user_data[0][5]
     predictions_raw = user_data[0][6]
     predictions = p_array_edit(predictions_raw)
+    
 
     return render_template('edit_predictions.html', msg=msg, username=username, score=score, predictions = predictions, today_val=today_val)
 
 @app.route('/process_predictions', methods=['GET','POST'])
 def process_predictions():
+    if 'user' not in session:
+            return redirect(url_for('login'))
+    
     if request.method == 'POST':
         # Assuming you handle the POST data here
         username = session.get('user')
@@ -76,7 +106,6 @@ def process_predictions():
         # For example, updating the score predictions
         # Let's assume you receive and process the predictions data from the request JSON
         predictions = request.json  # This assumes the frontend sends a JSON payload
-        print(f">> Predictions: {predictions}")
         total_str = ""
         for i in range(51):
             tmp_str = ""
@@ -92,7 +121,14 @@ def process_predictions():
         print(f">> total_str: {total_str}")
         level = 1
         inventory = total_str
+        #score = calc_score(predictions)
         update_user(username, inventory, level, score)
+        user_data = get_user_data(username)
+        print(f"&&& user_data: {user_data}")
+        updated_predictions = user_data[0][6]
+        score = calc_score(updated_predictions)
+        update_user(username, inventory, level, score)
+        
 
         # Update the user's predictions in your database or storage here
 
@@ -111,36 +147,136 @@ def process_predictions():
         user_data = get_user_data(username)
         score = user_data[0][5]
         msg = "Your predictions have been saved.(GET)"
+        
         return render_template('process_predictions.html', msg=msg, score=score, username=username)
+
+    else:
+        return "Invalid method", 405
+    
+@app.route('/match_results', methods=['GET', 'POST'])
+def match_results():
+    if 'user' not in session:
+            return redirect(url_for('login'))
+    msg = ""
+    user_level = "user_level"
+    username = session['user']
+    user_data = get_user_data(username)
+    #print(f"User data: {user_data}")
+    score = user_data[0][5]
+    match_results_raw = get_match_results()[0]
+    #print(f"match_resuls_raw: {match_results_raw}")
+    match_results = p_array_edit(match_results_raw)
+
+    return render_template('match_results.html', msg=msg, user_level=user_level, username=username, score=score, match_results=match_results)
+    
+@app.route('/edit_match_results', methods=['GET', 'POST'])
+def edit_match_results():
+    if 'user' not in session:
+            return redirect(url_for('login'))
+
+    if session['user'] != 'admin':
+        return redirect(url_for('home'))
+    username = session['user']
+    user_data = get_user_data(username)
+    score = user_data[0][5]
+    msg = ""
+    match_results_raw = get_match_results()[0]
+    #print(f"match_resuls_raw: {match_results_raw}")
+    match_results = p_array_edit(match_results_raw)
+
+    return render_template('edit_match_results.html', msg=msg, username=username, score=score, match_results=match_results)
+
+@app.route('/process_match_results', methods=['GET','POST'])
+def process_match_results():
+    if 'user' not in session:
+            return redirect(url_for('login'))
+    if request.method == 'POST':
+        # Assuming you handle the POST data here
+        username = session.get('user')
+        if username != "admin":
+            return jsonify({"error": "Access restricted to admins only"}), 403
+        
+        user_data = get_user_data(username)
+        score = user_data[0][5]
+
+        # Process the incoming data from the request
+        # For example, updating the score match_results
+        # Let's assume you receive and process the match_results data from the request JSON
+        match_results = request.json  # This assumes the frontend sends a JSON payload
+        print(f">> match_results: {match_results}")
+        total_str = ""
+        for i in range(51):
+            tmp_str = ""
+            key = str(i + 1) + "H"
+            tmp_str += match_results[key]
+            tmp_str += "-"
+            key = str(i + 1) + "A"
+            tmp_str += match_results[key]
+            if i != 50:
+                tmp_str += ","
+            total_str += tmp_str
+        
+        print(f">> total_str: {total_str}")
+        level = 1
+        inventory = total_str
+        update_match_results(inventory)
+
+        # Update the user's match_results in your database or storage here
+
+        return jsonify({
+            "message": "Your match_results have been saved. (POST)",
+            "score": score,
+            "username": username
+        })
+
+    elif request.method == 'GET':
+        # If it's a GET request, render the HTML template as before
+        username = session.get('user')
+        if not username:
+            return "User not logged in", 403
+
+        user_data = get_user_data(username)
+        score = user_data[0][5]
+        msg = "Your match_results have been saved.(GET)"
+        return render_template('process_match_results.html', msg=msg, score=score, username=username)
 
     else:
         return "Invalid method", 405
 
 @app.route('/ranking', methods=['GET', 'POST'])
 def ranking():
+    if 'user' not in session:
+            return redirect(url_for('login'))
     msg = ""
     inventory = "inventory"
     user_level = "user_level"
     username = session['user']
-    score = 1000
+    user_data = get_user_data(username)
+    score = user_data[0][5]
     return render_template('ranking.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
 
 @app.route('/info', methods=['GET', 'POST'])
 def info():
+    if 'user' not in session:
+            return redirect(url_for('login'))
     msg = ""
     inventory = "inventory"
     user_level = "user_level"
     username = session['user']
-    score = 1000
+    user_data = get_user_data(username)
+    score = user_data[0][5]
     return render_template('info.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
 
 @app.route('/pool_info', methods=['GET', 'POST'])
 def pool_info():
+    if 'user' not in session:
+            return redirect(url_for('login'))
     msg = ""
     inventory = "inventory"
     user_level = "user_level"
     username = session['user']
-    score = 1000
+    user_data = get_user_data(username)
+    score = user_data[0][5]
     return render_template('pool_info.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score)
 
 
@@ -220,12 +356,25 @@ def dump1():
     c = conn.cursor()
     c.execute("SELECT * FROM users")
     data = c.fetchall()
-    conn.close()
 
-    lines = []
+    lines = ["TABLE users: ",]
 
     for row in data:
         lines.append(row)
+
+    c = conn.cursor()
+    c.execute("SELECT * FROM results")
+    data = c.fetchall()
+    conn.close()
+
+    lines.append(" ")
+    lines.append("TABLE results:")
+
+    for row in data:
+        lines.append(row)
+
+
+
 
     return render_template('dump.html', lines=lines)
 

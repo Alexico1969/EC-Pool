@@ -208,8 +208,8 @@ def p_array_edit(raw):
         out_list[i][5] = tmp2[0]
         out_list[i].append(tmp2[1])
         out_list[i].append(value_date(out_list[i][1]))
-        if i < 3:
-            print(f"#{i} : {tmp}, outlist[{i}] = {out_list[i]}")
+        #if i < 3:
+            #print(f"#{i} : {tmp}, outlist[{i}] = {out_list[i]}")
     return out_list
 
 def today():

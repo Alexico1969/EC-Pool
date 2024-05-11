@@ -16,7 +16,16 @@ Data dump
                 <div class="dump">{{line}}</div>
             {% endfor %}
         </div>
-        <div class="grid-item inventory hide"></div>
+        <div class="grid-item inventory">
+            <form method="GET">
+                <h3>MENU</h3>
+                <br>
+                <p><input type="submit" class="menu" value="HOME" formaction="/"></p>
+                <p><input type="submit" class="menu" value="Edit Match results" formaction="/edit_match_results"></p>
+                <p><input type="submit" class="menu" value="Ranking" formaction="/ranking"></p>
+                <p><input type="submit" class="menu" value="Database DUMP" formaction="/dump1"></p>
+            </form>
+        </div>
 
         <div class="grid-item bottomleft hide">7</div>
         <div class="grid-item commandline">

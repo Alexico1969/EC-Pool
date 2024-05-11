@@ -1,6 +1,5 @@
 users
 
-    id TEXT, 
     name TEXT, 
     email TEXT, 
     username TEXT, 
@@ -11,4 +10,9 @@ users
 
 
 
+results
+
+    results TEXT
+
+(the table results should have 1 recored only !)
 

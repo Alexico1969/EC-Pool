@@ -1,0 +1,141 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Home Page
+{% endblock %}
+
+{% block content %}
+<script>
+   document.addEventListener('DOMContentLoaded', function() {
+        var submitButton = document.getElementById('sbmt');
+
+        submitButton.addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent the default form submission behavior
+
+            var inputs = document.getElementsByClassName('inp_pred');
+            var data = {};
+
+            for (var i = 0; i < inputs.length; i++) {
+                var input = inputs[i];
+                data[input.id] = input.value;
+            }
+
+            fetch('/process_match_results', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                // Check the response is indeed JSON
+                const contentType = response.headers.get("content-type");
+                if (!contentType || !contentType.includes("application/json")) {
+                    throw new TypeError("Oops, we haven't got JSON!");
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Success:', data);
+                alert('Match results submitted successfully!');
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Failed to submit results. Error: ' + error.message);
+            });
+        });
+    });
+
+</script>
+<p class="username">{{username}}</p>
+<a href="/logout"><span id="logout_btn">logout</span></a>
+
+<div class="container">
+    <div class="grid-item topleft">
+        <p id="scr">Score</p>
+        <p id="score">{{score}}</p>
+    </div>
+    <div class="grid-item level"></div>
+    <div class="grid-item topright">
+        
+    </div>
+    <div class="grid-item healthbar"></div>
+    <div class="grid-item main">
+        
+        {% if msg %}
+            <p id="room_msg"> {{msg}} </p>
+        {% endif %}
+        <br>
+        <form method="POST">
+            <table class="matches_table">
+                <tr><th>#</th><th>Date</th><th>Time</th><th>Group</th><th>Teams</th><th></th><th></th><th></th></tr>
+            
+                {% for m in match_results %}
+                    <tr>
+                        <td>{{m[0]}}</td>
+                        <td>{{m[1]}}</td>
+                        <td>{{m[2]}}</td>
+                        <td>{{m[3]}}</td>
+                        <td>{{m[4]}}</td>
+                        <td>
+                            <input 
+                                type="text" 
+                                class="inp_pred" 
+                                size="1" 
+                                value="{{m[5]}}"
+                                maxlength="1"
+                                placeholder="{{m[5]}}"
+                                pattern="[0-9]"
+                                id="{{m[0]}}H"
+                                >
+
+                        </td>
+                        <td>-</td>
+                        <td>
+                            <input 
+                                type="text" 
+                                class="inp_pred" 
+                                size="1" 
+                                value="{{m[6]}}"
+                                maxlength="1"
+                                placeholder="{{m[6]}}"
+                                pattern="[0-9]"
+                                id="{{m[0]}}A"
+                                >
+                        </td>
+                    </tr>
+
+                {% endfor %}
+
+            </table>
+        </form>
+    </div>
+    <div class="grid-item inventory">
+        <form method="GET">
+            <h3>MENU</h3>
+            <br>
+            <p><input type="submit" class="menu" value="HOME" formaction="/"></p>
+            <p><input type="submit" class="menu" value="Edit Match results" formaction="/edit_match_results"></p>
+            <p><input type="submit" class="menu" value="Ranking" formaction="/ranking"></p>
+            <p><input type="submit" class="menu" value="Database DUMP" formaction="/dump1"></p>
+        </form>
+    </div>
+
+    <div class="grid-item bottomleft"></div>
+    <div class="grid-item commandline">
+            <p class="warning">Don't forget to submit when you're done with the match results ! 👉</p>
+    </div>
+    <div class="grid-item bottomright">
+            <button class="sbmt" id="sbmt">Submit</button>
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}  
+

@@ -31,14 +31,29 @@ footer {
     width: 100%;
 }
 
+a{
+    color: yellow;
+}
+
+a:visited{
+    color:#e19d30;
+}
+
 .container {
     display: grid;
     grid-template-columns: 1fr 9fr 2fr;
     grid-template-rows: 0.5fr 5fr 1fr;
     gap: 10px;
     padding: 10px;
+    background-image: url("/static/bg_04.png");
+    background-size: 20%;
   }
   
+
+.info1{
+    text-align: left;
+    color: beige;
+}
 .grid-item {
     background-color: #916114;
     text-align: center;
@@ -121,6 +136,25 @@ footer {
     text-align: left;
 }
 
+/*
+.healthbar{
+    position: relative;
+    background-image: url("/static/sidebar_bg.png");
+    background-size: 100%;   
+}
+
+.healthbar::before {
+    content: ""; 
+    position: absolute; 
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); 
+    z-index: 1; 
+}
+
+*/
 .matches_table{
     color: beige;
     margin: 0 auto;

@@ -4,10 +4,31 @@ from flask import session
 def connector():
     conn = sqlite3.connect('database.db')
     print("Opened database successfully")
+
+    # Create the tables
     conn.execute('CREATE TABLE IF NOT EXISTS users (name TEXT, email TEXT, username TEXT, password TEXT, level INTEGER, score INTEGER, inventory TEXT )')
     print("Table 'users' active")
+
     conn.execute('CREATE TABLE IF NOT EXISTS results (results TEXT)')
-    print("Table 'results' active")
+    #conn.execute('DROP TABLE results')
+
+    # Assign the cursor and execute the SELECT statement using it
+    c = conn.cursor()
+    c.execute("SELECT * FROM results")
+    data = c.fetchall()
+
+    print("check-01")
+    if data:
+        print("TABLE results has data")
+    else:
+        print("TABLE results is empty. Filling with dummy data.")
+        tmp_str = ""
+        for i in range(51):
+            tmp_str += "E-E"
+            if i != 50:
+                tmp_str += ","
+        c.execute("INSERT INTO results (results) VALUES (?)", (tmp_str,))  # Make sure the data is inserted using the cursor
+        conn.commit()
     conn.close()
     
     
@@ -36,6 +57,14 @@ def get_user_data(username):
     conn.close()
     return data
 
+def get_match_results():
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM results")
+    data = c.fetchall()
+    conn.close()
+    return data[0]
+
 def register_user(name, email, username, password, level, score):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
@@ -48,6 +77,13 @@ def update_user(username, inventory, level, score):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()
     c.execute("UPDATE users SET level = ?, score = ?, inventory = ? WHERE username = ?", (level, score, inventory, username))
+    conn.commit()
+    conn.close()
+
+def update_match_results(updated_results):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("UPDATE results SET results = ?", (updated_results,))
     conn.commit()
     conn.close()
 
@@ -70,185 +106,51 @@ def store(username, score, level, inventory, objects):
     session['inventory'] = inventory
     session['objects'] = objects
     
+def get_admin_info():
+    info = {}
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    c.execute("SELECT * FROM users")
+    data = c.fetchall()
+    conn.close()
+    info['nr_of_users'] = str(len(data))
+    return info
 
-class Room:
-    def __init__(self="", level=0, description="", type="", door_locked=True, furniture="", objects="", expected_words="", expected_output=""):
-        self.level = level
-        self.description = description
-        self.type = type
-        self.door_locked = door_locked
-        self.furniture = furniture
-        self.objects = objects
-        self.expected_words = expected_words
-        self.expected_output = expected_output
+def outcome_score(current_result, current_prediction):
+    pred_home_score = current_prediction[0]
+    pred_away_score = current_prediction[2]
+    resu_home_score = current_result[0]
+    resu_away_score = current_result[2]
+    if pred_home_score > pred_away_score:
+        pred = "home"
+    elif pred_home_score < pred_away_score:
+        pred = "away"
+    else:
+        pred = "tie"
+    if resu_home_score > resu_away_score:
+        resu = "home"
+    elif resu_home_score < resu_away_score:
+        resu = "away"
+    else:
+        resu = "tie"
+    if pred == resu:
+        return 1
+    else:
+        return 0
 
-def init_rooms():
-    rooms = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
-    #level 1
-    rooms[0] = Room()
-    rooms[1] = Room(1, 
-                   "You are in a room. There is a table, a small cabinet and a chair. There is a door to your left.", 
-                   "inventory",
-                   True,
-                   "table,chair,door,cabinet" , 
-                   {"table":"key", "door":"<doorlock>", "chair":"", "cabinet":"<spider>"}, 
-                   "", 
-                   "")
-    rooms[2] = Room(2,
-                     "You are in a room. There is a table, a cabinet and 2 chairs. There is a door to your left.", 
-                     "code",
-                     True,
-                     "table,chair,door,cabinet" , 
-                     {"table":"computer", "door":"<doorlock>", "chair":"", "cabinet":"<fly>", "doorlock":"<sophisticated piece of technology>"}, 
-                     "", 
-                     "321321")
-    
-    rooms[3] = Room(3,
-                     "You are in a room. There is a table, a small cabinet, a plant and a chair. There is a door to your left.", 
-                     "code",
-                     True,
-                     "table,chair,door,cabinet,plant" , 
-                     {"table":"computer", "door":"<doorlock>", "chair":"", "cabinet":"<spider>", "plant":"<leaf>", "doorlock":"<sophisticated piece of technology>"}, 
-                     "", 
-                     "1051")
-    
-    rooms[4] = Room(4,
-                        "You are in a room. There is a table and 2 chairs. There is a door to your left.",
-                        "code",
-                        True,
-                        "table,chair,door,cabinet" ,
-                        {"table":"computer", "door":"<doorlock>", "chair":"<cushen>", "cabinet":"<pencil>", "doorlock":"<sophisticated piece of technology>"},
-                        "",
-                        "1821")
-    
-    rooms[5] = Room(5,
-                        "You are in a room. There is a table, a small cabinet, a painting and a chair. There is a door to your left.",
-                        "code",
-                        True,
-                        "table,chair,door,cabinet,painting" ,
-                        {"table":"computer", "door":"<doorlock>", "chair":"", "cabinet":"<spider>", "painting":"<price-tag: $20>", "doorlock":"<sophisticated piece of technology>"},
-                        "",
-                        "8888")
-    
-    rooms[6] = Room(6,
-                        "You are in a room. There is a table, a small cabinet and a chair. There is a door to your left.",
-                        "code",
-                        True,
-                        "table,chair,door,cabinet" ,
-                        {"table":"computer", "door":"<doorlock>", "chair":"", "cabinet":"", "doorlock":"<sophisticated piece of technology>"},
-                        "",
-                        "1324")
-    
-    rooms[7] = Room(7,
-                        "You are in a room. There is a table, a small cabinet and a chair. There is a door to your left.",
-                        "code",
-                        True,
-                        "table,chair,door,cabinet" ,
-                        {"table":"computer", "door":"<doorlock>", "chair":"", "cabinet":"<spider>", "painting":"<price-tag: $20>", "doorlock":"<sophisticated piece of technology>"},
-                        "",
-                        "379379")
-    
-    rooms[8] = Room(8,
-                        "You are in a room. There is a table, a small cabinet, a poster and a chair. There is a door to your left.",
-                        "code",
-                        True,
-                        "table,chair,door,cabinet,poster" ,
-                        {"table":"computer", "door":"<doorlock>", "chair":"", "cabinet":"<spider>", "poster":"<picture of David Malan>", "doorlock":"<sophisticated piece of technology>"},
-                        "",
-                        "1331")
-    
-    rooms[9] = Room(9,
-                        "You are in a room. There is a table and a small cabinet. There is a door to your left.",
-                        "code",
-                        True,
-                        "table,door,cabinet" ,
-                        {"table":"computer", "door":"<doorlock>", "cabinet":"", "doorlock":"<sophisticated piece of technology>"},
-                        "",
-                        "2748")
-    
-    rooms[10] = Room(10,
-                        "You are in a room. There is a table and a small cabinet. There is a door to your left.",
-                        "code",
-                        True,
-                        "table,door,cabinet" ,
-                        {"table":"computer", "door":"<doorlock>", "cabinet":"", "doorlock":"<sophisticated piece of technology>"},
-                        "",
-                        "9999")
-    
-    rooms[11] = Room(11,
-                        "Do you like binge-watching? I'm at season 2, episode 4. Check out the poster !",
-                        "code",
-                        True,
-                        "table,chair,door,cabinet,poster" ,
-                        {"table":"computer", "door":"<doorlock>", "cabinet":"","poster":"<picture of 'The OA'>"},
-                        "",
-                        "yyy")
-    
-    rooms[12] = Room(12,
-                        "Life is beautiful",
-                        "code",
-                        True,
-                        "table,chair,door,cabinet,poster" ,
-                        {"table":"computer", "door":"<doorlock>", "cabinet":"","poster":"<picture of 'La Vita e Bella'>"},
-                        "",
-                        "silence")
-    
-    rooms[13] = Room(13,
-                        "The choice is yours.... ",
-                        "code",
-                        True,
-                        "table,chair,door,cabinet,poster" ,
-                        {"table":"computer", "door":"<doorlock>", "cabinet":"","poster":"<picture of 'the Matrix'>"},
-                        "",
-                        "red pill")
-
-
-    rooms[14] = Room(14,
-                        "You are in.. yet another room... you hear a noise...",
-                        "person",
-                        True,
-                        "door,cabinet" ,
-                        {"table":"", "door":"", "cabinet":""},
-                        "",
-                        "----")
-
-
-    rooms[15] = Room(14,
-                        "This is the last level for now.",
-                        "last",
-                        True,
-                        "table,chair,door,cabinet" ,
-                        {"table":"screwdriver", "door":"<blue doorlock>", "chair":"", "desk":"newspaper"},
-                        "",
-                        "----")
-    
-    '''
-
-    rooms[11] = Room(11,
-                        "This is the last level for now.",
-                        "last",
-                        True,
-                        "table,chair,door,cabinet" ,
-                        {"table":"screwdriver", "door":"<blue doorlock>", "chair":"", "desk":"newspaper"},
-                        "",
-                        "----")
-    
-    
-    '''
-                   
-
-
-
-
-
-    return rooms
-    
-
-
-'''
-rooms = {
-    1: ["1", "You are in a room. There is a table and a chair. There is a door to your left.", "table,chair,door" , {"table":"key"}, "inventory", "key", "", ""],
-    2: ["2", "table,computer,chair", {}, "code", "print,Hello,World", "Hello World", ""],
-}
-
-'''
+def calc_score(predictions_raw):
+    score = 0
+    match_results = get_match_results()[0].split(",")
+    predictions = predictions_raw.split(",")
+    print("=== function calc_score ==")
+    print(f"predictions: {predictions}")
+    print(f"match_results: {match_results}")
+    for i, match in enumerate(match_results):
+        if match != "E-E":
+            current_result = match
+            current_prediction = predictions[i]
+            if current_result == current_prediction:
+                score += 3
+            score += outcome_score(current_result, current_prediction)
+    print(f">> new score: {score}")
+    return score
