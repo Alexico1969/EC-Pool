@@ -211,7 +211,7 @@ def calc_ranking():
     print("  >>> feching data")
     
     for row in data:
-        if row[0] != 'admin':
+        if "admin" not in row[0]:
             tmp_list = []
             tmp_list.append(row[0])
             tmp_list.append(row[5])
