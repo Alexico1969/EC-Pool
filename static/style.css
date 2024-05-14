@@ -170,6 +170,13 @@ a:visited{
     padding: 3px 5px;
 }
 
+.del_btn{
+    background-color: rgb(241, 76, 76);
+    border-radius: 3px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
 .inventory{
     background-color: rgb(255, 243, 150);
 }

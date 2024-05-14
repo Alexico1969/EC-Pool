@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Data dump
+{% endblock %}
+
+{% block content %}
+<form method="POST">
+    <div class="container">
+        <div class="grid-item logo hide"></div>
+        <div class="grid-item level">Data dump</div>
+        <div class="grid-item topright hide"></div>
+        <div class="grid-item healthbar hide">4</div>
+        <div class="grid-item main">
+            <form method="post">
+                <table class="matches_table">
+
+                
+                    {% for l in lines: %}
+                        
+                        <tr>
+                            <td>
+                                <input type="text" value="{{l[0]}}">
+                            </td>
+                            <td>
+                                <input type="text" value="{{l[1]}}">
+                            </td>
+                            <td>
+                                <input type="text" value="{{l[2]}}">
+                            </td>
+                            <td>
+                                <input type="text" value="{{l[3]}}">
+                            </td>
+                            <td>
+                                <input type="text" value="{{l[4]}}">
+                            </td>
+                            <td>
+                                <input type="text" value="{{l[5]}}">
+                            </td>
+                            <td>
+                                <button type="submit" class="del_btn" id="" name="del" value="{{l[2]}}">Del</button>
+                            </td>
+                        </tr>
+        
+                    {% endfor %}
+                </table>
+            </form>
+        </div>
+        <div class="grid-item inventory">
+            <form method="GET">
+                <h3>MENU</h3>
+                <br>
+                <p><input type="submit" class="menu" value="HOME" formaction="/"></p>
+                <p><input type="submit" class="menu" value="Edit Match results" formaction="/edit_match_results"></p>
+                <p><input type="submit" class="menu" value="CRUD users" formaction="/CRUD_users"></p>
+                <p><input type="submit" class="menu" value="Database DUMP" formaction="/dump1"></p>
+            </form>
+        </div>
+
+        <div class="grid-item bottomleft hide">7</div>
+        <div class="grid-item commandline">
+            <span class="msg">{{msg}}</span>
+        </div>
+        <div class="grid-item bottomright hide"></div>
+
+    </div>
+</form>
+{% endblock %}  
+

@@ -90,6 +90,37 @@ def update_user(username, inventory, level, score):
     conn.commit()
     conn.close()
 
+'''
+def delete_user(username):
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+    print(f"DELETING user {username}")
+    c.execute("DELETE FROM users WHERE username = ?", (username,))
+    conn.commit()
+    conn.close()
+'''
+
+def delete_user(username):
+    try:
+        conn = sqlite3.connect('database.db')
+        c = conn.cursor()
+        print(f"DELETING user {username}")
+
+        # Check if the user exists before attempting to delete
+        c.execute("SELECT COUNT(*) FROM users WHERE username = ?", (username,))
+        user_count = c.fetchone()[0]
+        
+        if user_count == 0:
+            print(f"User {username} does not exist.")
+        else:
+            c.execute("DELETE FROM users WHERE username = ?", (username,))
+            conn.commit()
+            print(f"User {username} deleted successfully.")
+        
+        conn.close()
+    except sqlite3.Error as e:
+        print(f"SQLite error: {e}")
+
 def update_match_results(updated_results):
     conn = sqlite3.connect('database.db')
     c = conn.cursor()

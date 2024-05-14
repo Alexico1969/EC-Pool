@@ -11,6 +11,7 @@ Data dump
         <div class="grid-item level">Data dump</div>
         <div class="grid-item topright hide"></div>
         <div class="grid-item healthbar hide">4</div>
+        
         <div class="grid-item main">
             {% for line in lines %}
                 <div class="dump">{{line}}</div>
@@ -19,10 +20,9 @@ Data dump
         <div class="grid-item inventory">
             <form method="GET">
                 <h3>MENU</h3>
-                <br>
                 <p><input type="submit" class="menu" value="HOME" formaction="/"></p>
                 <p><input type="submit" class="menu" value="Edit Match results" formaction="/edit_match_results"></p>
-                <p><input type="submit" class="menu" value="Ranking" formaction="/ranking"></p>
+                <p><input type="submit" class="menu" value="CRUD users" formaction="/CRUD_users"></p>
                 <p><input type="submit" class="menu" value="Database DUMP" formaction="/dump1"></p>
             </form>
         </div>

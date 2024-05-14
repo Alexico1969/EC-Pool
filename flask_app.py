@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_session import Session
-from database import connector, check_login, register_user, get_user_data, update_user, get_admin_info, get_match_results, update_match_results, calc_score, calc_ranking, check_existing_user, recalc_score_all
+from database import connector, check_login, register_user, get_user_data, update_user, get_admin_info, get_match_results
+from database import update_match_results, calc_score, calc_ranking, check_existing_user, recalc_score_all, delete_user
 from helper import p_array, p_array_edit, today, value_date
 import sqlite3
 
@@ -372,11 +373,39 @@ def dump1():
     for row in data:
         lines.append(row)
 
-
-
-
     return render_template('dump.html', lines=lines)
 
+#CRUD for the users table
+@app.route('/CRUD_users', methods=['GET', 'POST'])
+def CRUD_users():
+    if 'user' not in session:
+            return redirect(url_for('login'))
+
+    if session['user'] != 'admin':
+        return redirect(url_for('home'))
+
+    conn = sqlite3.connect('database.db')
+    c = conn.cursor()
+
+    if request.method == 'POST':
+         del_usr = request.form.get('del')
+         print(f"User to delete: {del_usr}")
+         delete_user(del_usr)
+
+    c.execute("SELECT * FROM users")
+    data = c.fetchall()
+
+    lines = []
+
+    for row in data:
+        lines.append(row)
+
+    c = conn.cursor()
+    c.execute("SELECT * FROM results")
+    data = c.fetchall()
+    conn.close()
+
+    return render_template('CRUD_users.html', lines=lines)
 
 
 # -------------------------------------------------------------------------------------------
