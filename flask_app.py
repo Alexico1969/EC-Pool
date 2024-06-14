@@ -78,7 +78,7 @@ def edit_predictions():
             return redirect(url_for('login'))
     msg = ""
     today_val = value_date(today())
-    #today_val = value_date("Fri Jun 20") # to test if predictions can be made for today's match or matches in the past (should not be able)
+    #today_val = value_date("Fri Jun 2") # to test if predictions can be made for today's match or matches in the past (should not be able)
     username = session['user']
     user_data = get_user_data(username)
     #print(f"User data: {user_data}")
