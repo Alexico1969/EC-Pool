@@ -217,7 +217,7 @@ def calc_ranking():
             tmp_list.append(row[5])
             ranking.append(tmp_list)
 
-    ranking_sorted = sorted(ranking, key=lambda x: x[0], reverse=True)
+    ranking_sorted = sorted(ranking, key=lambda x: x[1], reverse=True)
 
     
     return ranking_sorted
