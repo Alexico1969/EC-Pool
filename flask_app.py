@@ -259,7 +259,7 @@ def ranking():
     user_data = get_user_data(username)
     score = user_data[0][5]
     ranking_data = calc_ranking()
-    print(f"Ranking data: {ranking_data}")
+    #print(f"Ranking data: {ranking_data}")
     return render_template('ranking.html', msg=msg, inventory=inventory, user_level=user_level, username=username, score=score, ranking_data=ranking_data)
 
 @app.route('/info', methods=['GET', 'POST'])
