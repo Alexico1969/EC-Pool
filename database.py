@@ -185,15 +185,18 @@ def calc_score(predictions_raw, username):
     print(f"match_results: {match_results}")
     for i, match in enumerate(match_results):
         if match != "E-E":
-            current_result = match
-            current_prediction = predictions[i]
-            if current_result == current_prediction:
-                score += 3
-                print(f"Added 3 points: pred = {current_prediction}, result = {current_result}")
-            print(f"[function calc_score] current_result: {current_result}, current_prediction: {current_prediction}")
-            score_for_predicting_result = outcome_score(current_result, current_prediction)
-            print(f"Points for predicting outcome: {score_for_predicting_result}")
-            score += score_for_predicting_result
+            try:
+                current_result = match
+                current_prediction = predictions[i]
+                if current_result == current_prediction:
+                    score += 3
+                    print(f"Added 3 points: pred = {current_prediction}, result = {current_result}")
+                print(f"[function calc_score] current_result: {current_result}, current_prediction: {current_prediction}")
+                score_for_predicting_result = outcome_score(current_result, current_prediction)
+                print(f"Points for predicting outcome: {score_for_predicting_result}")
+                score += score_for_predicting_result
+            except:
+                print("Error in score calculation")
     print(f">> new score: {score}")
     return score
 
