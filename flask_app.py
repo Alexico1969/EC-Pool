@@ -122,6 +122,9 @@ def process_predictions():
         #print(f">> total_str: {total_str}")
         level = 1
         inventory = total_str
+        print()
+        print("########################################")
+        print(f"Player: {username}")
         #score = calc_score(predictions)
         update_user(username, inventory, level, score)
         user_data = get_user_data(username)

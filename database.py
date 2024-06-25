@@ -174,15 +174,17 @@ def calc_score(predictions_raw):
     score = 0
     match_results = get_match_results()[0].split(",")
     predictions = predictions_raw.split(",")
-    #print("=== function calc_score ==")
-    #print(f"predictions: {predictions}")
-    #print(f"match_results: {match_results}")
+    print("=== function calc_score ==")
+    print(f"predictions: {predictions}")
+    print(f"match_results: {match_results}")
     for i, match in enumerate(match_results):
         if match != "E-E":
             current_result = match
             current_prediction = predictions[i]
             if current_result == current_prediction:
                 score += 3
+                print(f"Added 3 points: pred = {current_prediction}, result = {current_result}")
+            print(f"Points for predicting outcome: {outcome_score(current_result, current_prediction)}")
             score += outcome_score(current_result, current_prediction)
     print(f">> new score: {score}")
     return score
