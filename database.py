@@ -184,8 +184,10 @@ def calc_score(predictions_raw):
             if current_result == current_prediction:
                 score += 3
                 print(f"Added 3 points: pred = {current_prediction}, result = {current_result}")
-            print(f"Points for predicting outcome: {outcome_score(current_result, current_prediction)}")
-            score += outcome_score(current_result, current_prediction)
+            print(f"[function calc_score] current_result: {current_result}, current_prediction: {current_prediction}")
+            score_for_predicting_result = outcome_score(current_result, current_prediction)
+            print(f"Points for predicting outcome: {score_for_predicting_result}")
+            score += score_for_predicting_result
     print(f">> new score: {score}")
     return score
 
