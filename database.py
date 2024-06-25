@@ -231,3 +231,13 @@ def calc_ranking():
 
     
     return ranking_sorted
+
+def fix():
+    conn = sqlite3.connect('database.db')
+    username = "GEsgro"
+    inventory = '2-0,1-1,1-0,2-0,1-2,0-1,0-2,2-2,4-0,0-2,1-1,2-1,2-1,1-1,1-1,0-2,0-2,1-1,1-1,1-2,2-3,1-2,1-2,1-1,2-2,1-1,1-2,1-2,3-1,2-1,2-0,1-1,1-2,2-1,1-2,0-3,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0,0-0'
+    c = conn.cursor()
+    c.execute("UPDATE users SET inventory = ? WHERE username = ?", (inventory, username))
+    conn.commit()
+    conn.close()
+    

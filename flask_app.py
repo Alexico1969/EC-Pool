@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
 from flask_session import Session
 from database import connector, check_login, register_user, get_user_data, update_user, get_admin_info, get_match_results
-from database import update_match_results, calc_score, calc_ranking, check_existing_user, recalc_score_all, delete_user
+from database import update_match_results, calc_score, calc_ranking, check_existing_user, recalc_score_all, delete_user, fix
 from helper import p_array, p_array_edit, today, value_date
 import sqlite3
 
@@ -18,6 +18,7 @@ print(today())
 print(f"Today's value: {value_date(today())}")
 print(f"July 1st's value: {value_date('Sat Jul 1')}")
 
+fix()  #temp function to fix what needs to be fixed (function in database.py)
         
 @app.route('/', methods=['GET', 'POST'])
 def home():
