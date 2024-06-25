@@ -171,6 +171,12 @@ def outcome_score(current_result, current_prediction):
         return 0
 
 def calc_score(predictions_raw):
+    username = session['user']
+    print("**************")
+    print()
+    print(f"USER: {username}")
+    print()
+    print("**************")
     score = 0
     match_results = get_match_results()[0].split(",")
     predictions = predictions_raw.split(",")
