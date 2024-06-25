@@ -170,13 +170,13 @@ def outcome_score(current_result, current_prediction):
     else:
         return 0
 
-def calc_score(predictions_raw):
-    username = session['user']
-    print("**************")
+def calc_score(predictions_raw, username):
+    print()
+    print("*********************")
     print()
     print(f"USER: {username}")
+    print("*********************")
     print()
-    print("**************")
     score = 0
     match_results = get_match_results()[0].split(",")
     predictions = predictions_raw.split(",")
@@ -208,7 +208,7 @@ def recalc_score_all():
     for row in data:
         username = row[2]
         predictions = row[6]
-        score = calc_score(predictions)
+        score = calc_score(predictions, username)
         update_user(username, predictions, level, score)
 
 def calc_ranking():
