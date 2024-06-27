@@ -126,12 +126,12 @@ def process_predictions():
         print()
         print("########################################")
         print(f"Player: {username}")
-        #score = calc_score(predictions)
+        #score = calc_score(predictions, username)
         update_user(username, inventory, level, score)
         user_data = get_user_data(username)
         #print(f"&&& user_data: {user_data}")
         updated_predictions = user_data[0][6]
-        score = calc_score(updated_predictions)
+        score = calc_score(updated_predictions, username)
         update_user(username, inventory, level, score)
         
 

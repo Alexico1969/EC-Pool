@@ -6,7 +6,7 @@ users
     password TEXT, 
     level INTEGER, 
     score INTEGER, 
-    inventory TEXT  --> Is where we are going to save the user's predictions
+    inventory TEXT  --> user's predictions
 
 
 
