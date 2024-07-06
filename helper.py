@@ -179,15 +179,16 @@ def p_array_edit(raw):
         ["42","Mon Jul 1","midday ET","-","France vs. Belgium"],
         ["43","Tue Jul 2","midday ET","-","Romania vs. Netherlands"],
         ["44","Tue Jul 2","3 p.m. ET","-","Austria vs. Turkiye"],
-        ["45","Fri Jul 5","midday ET","-","Win. 39 vs. Win. 37"],
-        ["46","Fri Jul 5","3 p.m. ET","-","Win. 41 vs. Win. 42"],
-        ["47","Sat Jul 6","3 p.m. ET","-","Win. 43 vs. Win. 44"],
-        ["48","Sat Jul 6","midday ET","-","Win. 40 vs. Win. 38"],
-        ["49","Tue Jul 9","3 p.m. ET","-","Win. 45 vs. Win. 46"],
+        ["45","Fri Jul 5","midday ET","-","Spain vs. Germany"],
+        ["46","Fri Jul 5","3 p.m. ET","-","Portugal vs. France"],
+        ["47","Sat Jul 6","3 p.m. ET","-","Netherlands vs. Turkey"],
+        ["48","Sat Jul 6","midday ET","-","England vs. Switzerland"],
+        ["49","Tue Jul 9","3 p.m. ET","-","Spain vs. France"],
         ["50","Wed Jul 10","3 p.m. ET","-","Win. 47 vs. Win. 48"],
         ["51","Sun Jul 14","3 p.m. ET","-","FIN: Win. 49 vs. Win. 50"]
 
     ]
+ 
  
     # This function takes in the user's predictions as a string ("0-0, 1-1, ...."), then adds match info and returns an array like this:
     # [['1', 'Fri Jun 14', '3 p.m. ET', 'A', 'Germany vs. Scotland', '0', '0'], ['2', 'Sat Jun 15', '9 a.m. ET', 'A', 'Hungary vs. Switzerland', '0', '0'], etc.
