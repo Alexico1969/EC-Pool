@@ -1,6 +1,6 @@
 import datetime
 
-matches_backup = [
+matches = [
         ["1","Fri Jun 14","3 p.m. ET","A","Germany vs. Scotland"],
         ["2","Sat Jun 15","9 a.m. ET","A","Hungary vs. Switzerland"],
         ["3","Sat Jun 15","midday ET","B","Spain vs. Croatia"],
@@ -50,10 +50,10 @@ matches_backup = [
         ["47","Sat Jul 6","3 p.m. ET","-","Netherlands vs. Turkey"],
         ["48","Sat Jul 6","midday ET","-","England vs. Switzerland"],
         ["49","Tue Jul 9","3 p.m. ET","-","Spain vs. France"],
-        ["50","Wed Jul 10","3 p.m. ET","-","Win. 47 vs. Win. 48"],
-        ["51","Sun Jul 14","3 p.m. ET","-","FIN: Win. 49 vs. Win. 50"]
+        ["50","Wed Jul 10","3 p.m. ET","-","Netherlands vs. England"],
+        ["51","Sun Jul 14","3 p.m. ET","-","FIN: Spain vs. England"]
 
-]
+    ]
 
 
 
@@ -109,7 +109,7 @@ def p_array(raw):
         ["48","Sat Jul 6","midday ET","-","England vs. Switzerland"],
         ["49","Tue Jul 9","3 p.m. ET","-","Spain vs. France"],
         ["50","Wed Jul 10","3 p.m. ET","-","Netherlands vs. England"],
-        ["51","Sun Jul 14","3 p.m. ET","-","FIN: Win. 49 vs. Win. 50"]
+        ["51","Sun Jul 14","3 p.m. ET","-","FIN: Spain vs. England"]
 
     ]
  
@@ -185,7 +185,7 @@ def p_array_edit(raw):
         ["48","Sat Jul 6","midday ET","-","England vs. Switzerland"],
         ["49","Tue Jul 9","3 p.m. ET","-","Spain vs. France"],
         ["50","Wed Jul 10","3 p.m. ET","-","Netherlands vs. England"],
-        ["51","Sun Jul 14","3 p.m. ET","-","FIN: Win. 49 vs. Win. 50"]
+        ["51","Sun Jul 14","3 p.m. ET","-","FIN: Spain vs. England"]
 
     ]
  
